@@ -27,7 +27,9 @@ RUN echo "deb http://packages.dotdeb.org wheezy all" >> /etc/apt/sources.list.d/
   echo "extension=blitz.so" | tee -a blitz.ini && \
   php5enmod blitz && \
   usermod -u 1000 www-data && \
+  mkdir /var/log/php-fpm && \
   sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php5/fpm/php-fpm.conf && \
+  sed -i -e "s/error_log\s*=.*/error_log = /var/log/php-fpm/php5-fpm.log/g" /etc/php5/fpm/php-fpm.conf && \
   sed -i -e "s/listen\s*=.*/listen = 0.0.0.0:9000/g" /etc/php5/fpm/pool.d/www.conf && \
   sed -i -e "s/upload_max_filesize\s*=.*/upload_max_filesize = 2000M/g" /etc/php5/fpm/php.ini && \
   sed -i -e "s/max_input_time\s*=.*/max_input_time = 900/g" /etc/php5/fpm/php.ini && \
@@ -50,5 +52,7 @@ RUN cd /usr/src/ && \
   php5enmod sphinx
 
 EXPOSE 9000
+
+VOLUME ["/var/log/php-fpm"]
 
 CMD ["/usr/sbin/php5-fpm"]
