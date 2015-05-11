@@ -15,12 +15,11 @@ RUN echo "deb http://packages.dotdeb.org wheezy all" >> /etc/apt/sources.list.d/
   apt-get install -yq php5-dev php5-cli php5-fpm php5-pgsql php5-memcached php5-imagick php5-mongo php5-curl && \
   apt-get clean && \
   cd /usr/local/src && \
-  wget http://alexeyrybak.com/blitz/all-releases/blitz-0.8.14.tar.gz && \
-  tar xzf blitz-0.8.14.tar.gz && \
-  rm -f blitz-0.8.14.tar.gz && \
-  cd blitz-0.8.14 && \
+  git clone https://github.com/alexeyrybak/blitz && \
+  cd blitz && \
   phpize && \
-  ./configure --enable-blitz && \
+  ./configure && \
+  make && \
   make install clean && \
   cd /etc/php5/mods-available && \
   touch blitz.ini && \
@@ -50,6 +49,18 @@ RUN cd /usr/src/ && \
   touch sphinx.ini && \
   echo "extension=sphinx.so" | tee -a sphinx.ini && \
   php5enmod sphinx
+
+RUN cd /usr/local/ && \
+  git clone https://github.com/tarantool/tarantool-php && \
+  cd tarantool-php && \
+  phpize && \
+  ./configure && \
+  make && \
+  make install && \
+  cd /etc/php5/mods-available && \
+  touch tarantool.ini && \
+  echo "extension=/usr/local/tarantool-php/modules/tarantool.so" | tee -a tarantool.ini && \
+  php5enmod tarantool
 
 EXPOSE 9000
 
