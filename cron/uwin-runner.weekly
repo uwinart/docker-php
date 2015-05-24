@@ -1,5 +1,4 @@
 #!/bin/bash
 set -e
 
-/data/www/*//application/system/uwinsite-cron hourly
-
+/data/www/*/current/application/system/uwinsite-cron hourly
