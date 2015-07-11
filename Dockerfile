@@ -36,6 +36,12 @@ RUN echo "deb http://packages.dotdeb.org wheezy all" >> /etc/apt/sources.list.d/
   sed -i -e "s/memory_limit\s*=.*/memory_limit = 1024M/g" /etc/php5/fpm/php.ini && \
   sed -i -e "s/pm\.max_children\s*=.*/pm\.max_children = 12/g" /etc/php5/fpm/pool.d/www.conf
 
+RUN yes "" | pecl install raphf propro pecl_http && \
+  cd /etc/php5/mods-available && \
+  touch http.ini && \
+  echo "extension=raphf.so\nextension=propro.so\nextension=http.so" | tee -a http.ini && \
+  php5enmod http
+
 RUN cd /usr/src/ && \
   wget http://sphinxsearch.com/files/sphinx-2.2.6-release.tar.gz && \
   tar -xvf sphinx-2.2.6-release.tar.gz && \
