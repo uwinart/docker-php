@@ -12,7 +12,7 @@ RUN echo "deb http://packages.dotdeb.org wheezy all" >> /etc/apt/sources.list.d/
   echo "deb-src http://packages.dotdeb.org wheezy-php56 all" >> /etc/apt/sources.list.d/dotdeb.list && \
   wget http://www.dotdeb.org/dotdeb.gpg -O- |apt-key add - && \
   apt-get update -q && \
-  apt-get install -yq php5-dev php5-cli php5-fpm php5-pgsql php5-memcached php5-imagick php5-mongo php5-curl && \
+  apt-get install -yq php5-dev php5-cli php5-fpm php5-pgsql php5-memcached php5-imagick php5-mongo php5-curl libpcre3-dev && \
   apt-get clean && \
   cd /usr/local/src && \
   git clone https://github.com/alexeyrybak/blitz && \
@@ -34,10 +34,17 @@ RUN echo "deb http://packages.dotdeb.org wheezy all" >> /etc/apt/sources.list.d/
   sed -i -e "s/max_input_time\s*=.*/max_input_time = 900/g" /etc/php5/fpm/php.ini && \
   sed -i -e "s/max_execution_time\s*=.*/max_execution_time = 900/g" /etc/php5/fpm/php.ini && \
   sed -i -e "s/memory_limit\s*=.*/memory_limit = 1024M/g" /etc/php5/fpm/php.ini && \
+  sed -i -e "s/;date.timezone\s*=.*/date.timezone = Europe\/Kiev/g" /etc/php5/cli/php.ini && \
   sed -i -e "s/pm\.max_children\s*=.*/pm\.max_children = 12/g" /etc/php5/fpm/pool.d/www.conf
 
-RUN yes "" | pecl install raphf propro pecl_http && \
+RUN yes "" | pecl install raphf propro && \
   cd /etc/php5/mods-available && \
+  touch propro.ini && \
+  echo "extension=raphf.so\nextension=propro.so" | tee -a propro.ini && \
+  php5enmod propro && \
+  yes "" | pecl install pecl_http && \
+  php5dismod propro && \
+  rm -rf propro.ini && \
   touch http.ini && \
   echo "extension=raphf.so\nextension=propro.so\nextension=http.so" | tee -a http.ini && \
   php5enmod http
