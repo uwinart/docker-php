@@ -76,6 +76,8 @@ RUN cd /usr/local/ && \
 RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
   apt-get install -yq nodejs
 
+RUN apt-get install -yq php5-gd
+
 EXPOSE 9000
 
 VOLUME ["/var/log/php-fpm"]
