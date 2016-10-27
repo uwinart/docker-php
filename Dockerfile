@@ -6,10 +6,8 @@ MAINTAINER Yurii Khmelevskii <y@uwinart.com>
 # Set noninteractive mode for apt-get
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN echo "deb http://packages.dotdeb.org wheezy all" >> /etc/apt/sources.list.d/dotdeb.list && \
-  echo "deb-src http://packages.dotdeb.org wheezy all" >> /etc/apt/sources.list.d/dotdeb.list && \
-  echo "deb http://packages.dotdeb.org wheezy-php56 all" >> /etc/apt/sources.list.d/dotdeb.list && \
-  echo "deb-src http://packages.dotdeb.org wheezy-php56 all" >> /etc/apt/sources.list.d/dotdeb.list && \
+RUN echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list.d/dotdeb.list && \
+  echo "deb-src http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list.d/dotdeb.list && \
   wget http://www.dotdeb.org/dotdeb.gpg -O- |apt-key add - && \
   apt-get update -q && \
   apt-get install -yq php5-dev php5-cli php5-fpm php5-pgsql php5-memcached php5-imagick php5-mongo php5-curl libpcre3-dev && \
@@ -37,12 +35,12 @@ RUN echo "deb http://packages.dotdeb.org wheezy all" >> /etc/apt/sources.list.d/
   sed -i -e "s/;date.timezone\s*=.*/date.timezone = Europe\/Kiev/g" /etc/php5/cli/php.ini && \
   sed -i -e "s/pm\.max_children\s*=.*/pm\.max_children = 12/g" /etc/php5/fpm/pool.d/www.conf
 
-RUN yes "" | pecl install raphf propro && \
+RUN yes "" | pecl install raphf-1.1.2 propro-1.0.2 && \
   cd /etc/php5/mods-available && \
   touch propro.ini && \
   echo "extension=raphf.so\nextension=propro.so" | tee -a propro.ini && \
   php5enmod propro && \
-  yes "" | pecl install pecl_http && \
+  yes "" | pecl install pecl_http-2.5.6 && \
   php5dismod propro && \
   rm -rf propro.ini && \
   touch http.ini && \
