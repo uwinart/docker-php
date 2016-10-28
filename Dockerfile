@@ -73,7 +73,7 @@ RUN cd /usr/local/ && \
   echo "extension=/usr/local/tarantool-php/modules/tarantool.so" | tee -a tarantool.ini && \
   php5enmod tarantool
 
-RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
   apt-get install -yq nodejs
 
 RUN apt-get install -yq php5-gd
